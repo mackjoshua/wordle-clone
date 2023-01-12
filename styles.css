@@ -8,6 +8,7 @@ header {
     display: flex;
     justify-content: center;
     font-size: 1em;
+    margin-bottom: 1em;
 }
 
 main > section {
@@ -24,7 +25,7 @@ tr {
 .gameboard {
     display: table;
     table-layout: fixed;
-    width: 24%;
+    width: 22%;
     border-collapse: separate;
     border-spacing: .5em .5em;
 }
@@ -36,11 +37,11 @@ tr {
 
 tr > td {
     display: table-cell;
-    width: .1em;
-    height: 2em;
+    width: 1em;
+    height: 2.2em;
     /* margin: 2em; */
     text-align: center;
-    font-size: 2em;
+    font-size: 1.5em;
     border: 1px solid gray;
 
 }
