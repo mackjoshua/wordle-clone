@@ -11,63 +11,94 @@ const space3 = space2.nextElementSibling;
 const space4 = space3.nextElementSibling;
 const space5 = space4.nextElementSibling;
 
-// const guess1 = [space1,space2,space3,space4,space5];
 
 let theGuess = [];
+let spaces = [space1,space2,space3,space4,space5];
+let theString = '';
 
-// const evaluateSpace = function (array) {
-//     array.forEach(space => {
-//             document.onkeyup = function (e) {
-//                 console.log(space + ' I am targeted here');
-//                 space.textContent = e.key;
-//                 // space.nextElementSibling.textContent = e.key;
+// Function for making sure the value user provides is a letter
+const isLetter = function isLetter(letter) {
+    return /^[a-zA-Z]$/.test(letter);
+  }
 
-//             } 
-        
+let i = 0;
+let currentPosition = -1;
+
+const fillFirstRow = function () { document.onkeyup = function (e) {
+
+// If the user presses the backspace key, it will delete the last letter in the array
+    if (e.key == 'Backspace') {
+        // theGuess.pop();
+        theGuess[currentPosition] = '';
+        spaces[currentPosition].innerText = '';
+        currentPosition--;
+        if (currentPosition <= 0) {
+            currentPosition = 0;
+        }
+        console.log(currentPosition);
+        console.log(theGuess);
+    }
+// The first condition makes sure the array doesn't hold more than 5 letter
+// The second condition calls our isLetter function on the value of the key the user presses
+    if (theGuess.length < 5 && isLetter(e.key) == true) { 
+        // currentPosition++;
+        theGuess.push(e.key);
+
+
+        currentPosition++;
+        console.log(currentPosition);
+        // if (spaces[i].innerText == '') {
+        spaces[i].innerText = theGuess[currentPosition];
+        i++;
+        // } 
+    }
+    console.log(theGuess);
+
+    if (theGuess[currentPosition] == '') {
+
+        document.onkeyup = function (e) {
+            
+        }
+    }
+
+    }
+}
+
+const getString = (array) => { 
+    
+    document.addEventListener('keyup', (e) => {
+    if (e.key == 'Enter' && array.length == 5) {
+        theString = array.join('');
+        console.log(theString + ' on enter it evaluates here');
+        }
+    });
+    // console.log(theString);
+    // return theString;
+}
+
+const render =  ([array]) => {
+    let i = 0;
+    // fillFirstRow();
+    document.onkeyup = (e) => {
+
+        if (spaces[i].innerText === '') {
+            spaces[i].innerText = e.key;
+        }
+        i++;
+    }
+}
+
+// const populateScreen = (row) => {
+//     let i = 0
+//     row.forEach(space => {
+//         space[1].innerText = theGuess[1];
+//         i++;
 //     });
 // }
 
-
-const fillFirstRow = function () { document.onkeyup = function (e) {
-    // if (space1.textContent === '') {
-    //     space1.textContent = e.key;
-    // } else if (space2.textContent === '') {
-    //     space2.textContent = e.key
-    // }  else if (space3.textContent === '') {
-    //     space3.textContent = e.key
-    // } else if (space4.textContent === '') {
-    //     space4.textContent = e.key
-    // } else if (space5.textContent === '') {
-    //     space5.textContent = e.key
-    // }
-
-    // if (e.key == 'Backspace') {
-    //     console.log('backspace was tapped');
-    //     space5.textContent = '';
-    // } 
-    
-    // if (e.key == 'Backspace' && space5.textContent == '') {
-    //     space4.textContent = '';
-    // }
-
-    if (e.key == 'Backspace') {
-        theGuess.pop();
-        console.log(theGuess);
-        return theGuess;
-    }
-
-    theGuess.push(e.key);
-
-   
-
-    console.log(e.key);
-    console.log(theGuess);
-    }
-
-   
-
-}
-
-console.log(space1.innerText + ' here I am');
-
 fillFirstRow();
+// render(theGuess);
+// populateScreen(spaces);
+console.log(getString(theGuess) + ' It evaluated here');
+
+// console.log(getString());
