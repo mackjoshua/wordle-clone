@@ -1,0 +1,46 @@
+*,  *::before, *::after {
+    box-sizing: border-box;
+    font-family: 'Rubik', sans-serif;
+}
+
+
+header {
+    display: flex;
+    justify-content: center;
+    font-size: 1em;
+}
+
+main > section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+tr {
+    display: table-row;
+}
+
+.gameboard {
+    display: table;
+    table-layout: fixed;
+    width: 24%;
+    border-collapse: separate;
+    border-spacing: .5em .5em;
+}
+
+/* .gameboard > tbody {
+    display: table;
+    width: 100%;
+} */
+
+tr > td {
+    display: table-cell;
+    width: .1em;
+    height: 2em;
+    /* margin: 2em; */
+    text-align: center;
+    font-size: 2em;
+    border: 1px solid gray;
+
+}
