@@ -16,19 +16,7 @@ const space5 = space4.nextElementSibling;
 
 let theGuess = [];
 let spaces = [space1,space2,space3,space4,space5];
-
-
-// This event listener takes user input, verifies it's a letter, and then pushes it to our array
-// Also, it runs the first game function as well, so every time the event fires, the firstGame() fires too
-// which is responsible for pushing the array elements to the DOM
-
-document.addEventListener("keyup", function(event) {
-  if (event.key.match(/^[a-zA-Z]$/)) {
-        letterArray.push(event.key);
-        firstGame();
-        console.log(letterArray);
-    }
-});
+let tempKey = ['s','t','o','n','e'];
 
 
 // This function runs a for loop that prints the value of our array, which previously had a letter pushed to it,
@@ -40,8 +28,26 @@ function firstGame() {
     }
 }
 
-function evaluateWord () {
 
+// This function compares the user input against the key
+function evaluateWord (key, userWord) {
+    for (let i = 0; i < 5 ; i++) {
+        spaces[i].style.backgroundColor = 'white';
+
+        if (key.at(i) == userWord.at(i)) {
+            spaces[i].style.backgroundColor = 'green';
+            console.log(`The index at ${i} matches`);
+        } else if (key.includes(userWord.at(i)) && (key.at(i) != userWord.at(i))){
+                let index = userWord.includes(key[i]);
+                console.log(userWord.indexOf(index) + ' here I am');
+                spaces[i].style.backgroundColor = 'yellow';
+        }
+
+        
+
+       
+
+    }
 }
 
 function moveRow () {
@@ -56,6 +62,19 @@ function grabWord () {
     return word;
 }
 
+// This event listener takes user input, verifies it's a letter, and then pushes it to our array
+// Also, it runs the first game function as well, so every time the event fires, the firstGame() fires too
+// which is responsible for pushing the array elements to the DOM
+
+document.addEventListener("keyup", function(event) {
+    if (event.key.match(/^[a-zA-Z]$/)) {
+          letterArray.push(event.key);
+          firstGame();
+          console.log(letterArray);
+      }
+  });
+
+
 // This event listener runs the grabWord function every time the enter button is pressed
 document.addEventListener('keyup', (e) => {
     if (e.key == 'Enter') {
@@ -63,6 +82,7 @@ document.addEventListener('keyup', (e) => {
             return
         } else {
             grabWord();
+            evaluateWord(tempKey, letterArray);
             moveRow();
             console.log(letterArray);
         }
