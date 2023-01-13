@@ -90,15 +90,15 @@ document.addEventListener('keyup', () => {});
 // This function compares the user input against the key
 function evaluateWord (key, userWord) {
     for (let i = 0; i < 5 ; i++) {
-        spaces1[i].style.backgroundColor = 'white';
+        rowsArray[rowsIndex][i].style.backgroundColor = 'white';
 
         if (key.at(i) == userWord.at(i)) {
-            spaces1[i].style.backgroundColor = 'green';
+            rowsArray[rowsIndex][i].style.backgroundColor = 'green';
             console.log(`The index at ${i} matches`);
         } else if (key.includes(userWord.at(i)) && (key.at(i) != userWord.at(i))){
                 let index = userWord.includes(key[i]);
                 console.log(userWord.indexOf(index) + ' here I am');
-                spaces1[i].style.backgroundColor = 'yellow';
+                rowsArray[rowsIndex][i].style.backgroundColor = 'yellow';
         }
     }
 }
