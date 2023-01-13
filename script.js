@@ -1,3 +1,5 @@
+let letterArray = [];
+
 const row1 = document.querySelector('#row-1');
 const row2 = document.querySelector('#row-2');
 const row3 = document.querySelector('#row-3');
@@ -14,91 +16,71 @@ const space5 = space4.nextElementSibling;
 
 let theGuess = [];
 let spaces = [space1,space2,space3,space4,space5];
-let theString = '';
 
-// Function for making sure the value user provides is a letter
-const isLetter = function isLetter(letter) {
-    return /^[a-zA-Z]$/.test(letter);
-  }
 
-let i = 0;
-let currentPosition = -1;
+// This event listener takes user input, verifies it's a letter, and then pushes it to our array
+// Also, it runs the first game function as well, so every time the event fires, the firstGame() fires too
+// which is responsible for pushing the array elements to the DOM
 
-const fillFirstRow = function () { document.onkeyup = function (e) {
-
-// If the user presses the backspace key, it will delete the last letter in the array
-    if (e.key == 'Backspace') {
-        // theGuess.pop();
-        theGuess[currentPosition] = '';
-        spaces[currentPosition].innerText = '';
-        currentPosition--;
-        if (currentPosition <= 0) {
-            currentPosition = 0;
-        }
-        console.log(currentPosition);
-        console.log(theGuess);
+document.addEventListener("keyup", function(event) {
+  if (event.key.match(/^[a-zA-Z]$/)) {
+        letterArray.push(event.key);
+        firstGame();
+        console.log(letterArray);
     }
-// The first condition makes sure the array doesn't hold more than 5 letter
-// The second condition calls our isLetter function on the value of the key the user presses
-    if (theGuess.length < 5 && isLetter(e.key) == true) { 
-        // currentPosition++;
-        theGuess.push(e.key);
+});
 
 
-        currentPosition++;
-        console.log(currentPosition);
-        // if (spaces[i].innerText == '') {
-        spaces[i].innerText = theGuess[currentPosition];
-        i++;
-        // } 
-    }
-    console.log(theGuess);
+// This function runs a for loop that prints the value of our array, which previously had a letter pushed to it,
+// to the DOM by setting the innerText value of the element of spaces at the same index. The values are all <td> elements
 
-    if (theGuess[currentPosition] == '') {
-
-        document.onkeyup = function (e) {
-            
-        }
-    }
-
+function firstGame() {
+    for(let i = 0 ; i < spaces.length; i++) {
+        spaces[i].innerText = letterArray[i] || '';
     }
 }
 
-const getString = (array) => { 
-    
-    document.addEventListener('keyup', (e) => {
-    if (e.key == 'Enter' && array.length == 5) {
-        theString = array.join('');
-        console.log(theString + ' on enter it evaluates here');
-        }
-    });
-    // console.log(theString);
-    // return theString;
+function evaluateWord () {
+
 }
 
-const render =  ([array]) => {
-    let i = 0;
-    // fillFirstRow();
-    document.onkeyup = (e) => {
+function moveRow () {
+    letterArray = [];
+}
 
-        if (spaces[i].innerText === '') {
-            spaces[i].innerText = e.key;
+
+// This function joins our letter array to a string so that it can be evaluated against the word of the day
+function grabWord () {
+    const word = letterArray.join('');
+    console.log(word);
+    return word;
+}
+
+// This event listener runs the grabWord function every time the enter button is pressed
+document.addEventListener('keyup', (e) => {
+    if (e.key == 'Enter') {
+        if (letterArray.length !== 5) {
+            return
+        } else {
+            grabWord();
+            moveRow();
+            console.log(letterArray);
         }
-        i++;
     }
-}
+});
 
-// const populateScreen = (row) => {
-//     let i = 0
-//     row.forEach(space => {
-//         space[1].innerText = theGuess[1];
-//         i++;
-//     });
-// }
+// This event listener pops the last item off of the letterArray, and runs the firstGame() function to 
+// repopulate the DOM
+let currentIndex = 0;
+document.addEventListener("keyup", function(event) {
+    if (event.key === "Backspace") {
+        // letterArray.splice(currentIndex - 1, 1);
+        letterArray.pop()
+        // currentIndex--;
+        firstGame();
+        console.log(letterArray);
+    }
+});
 
-fillFirstRow();
-// render(theGuess);
-// populateScreen(spaces);
-console.log(getString(theGuess) + ' It evaluated here');
+console.log(letterArray);
 
-// console.log(getString());
