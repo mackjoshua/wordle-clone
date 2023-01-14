@@ -67,11 +67,49 @@ let guessIndex = 0;
 // This function runs a for loop that prints the value of our array, which previously had a letter pushed to it,
 // to the DOM by setting the innerText value of the element of spaces at the same index. The values are all <td> elements
 
-// function firstGame() {
-//     for(let i = 0 ; i < spaces1.length; i++) {
-//         spaces1[i].innerText = letterArray[i] || '';
-//     }
-// }
+// This function connects to an API to get the word of the day
+
+async function getWordToday () {
+    const promise = await fetch('https://words.dev-apis.com/word-of-the-day');
+    const processedResponse = await promise.json();
+    console.log(typeof processedResponse);
+    return processedResponse;
+}
+
+// This function sets the word of the day
+const getTheWord = () => getWordToday().then(function (object) {
+    wordOfTheDay = object.word;
+    console.log(object.word + ' this is the word of the day');
+    getQuantity(wordOfTheDay);
+});
+
+// word.forEach((key,index) => obj[key] = theArray[index]);
+// You're going to need that later to map the arrays to an object to count the quantity of each letter
+
+
+
+// this function takes the word of the day, splits it into an array so that the filter method can be ran on it
+// and then counts how many times each letter appears
+function getQuantity (wordOfTheDay) {
+    wordOfTheDay = wordOfTheDay.split('');
+    console.log(wordOfTheDay);
+    let theArray = [];
+    for (let i = 0; i < wordOfTheDay.length; i++) {
+        const result = wordOfTheDay.filter(value => value == wordOfTheDay[i]).length;
+        theArray.push(result);
+        console.log(result + ' this is the result');
+        console.log(theArray);
+    }
+    console.log(theArray);
+    createQuant(wordOfTheDay, theArray);
+}
+
+function createQuant (word, theArray) {
+    let quants = {};
+    word.forEach((key,index) => quants[key] = theArray[index]);
+    console.log(quants);
+}
+
 
 function runGameTest() {
     for(let i = 0 ; i < rowsArray[rowsIndex].length; i++) {
@@ -79,16 +117,9 @@ function runGameTest() {
     }
 }
 
-
-function nextItem() {
-    rowsArray[rowsIndex].runGameTest();
-    rowsIndex++;
-}
-
-document.addEventListener('keyup', () => {});
-
-// This function compares the user input against the key
+// This function compares the user input against the key, and changes the color based on the result
 function evaluateWord (key, userWord) {
+
     for (let i = 0; i < 5 ; i++) {
         rowsArray[rowsIndex][i].style.backgroundColor = 'white';
 
@@ -102,26 +133,6 @@ function evaluateWord (key, userWord) {
         }
     }
 }
-
-function moveRow () {
-    letterArray = [];
-}
-
-
-// This function connects to an API to get the word of the day
-
-async function getWordToday () {
-    const promise = await fetch('https://words.dev-apis.com/word-of-the-day');
-    const processedResponse = await promise.json();
-    console.log(typeof processedResponse);
-    return processedResponse;
-}
-
-// This function sets the word of the day
-getWordToday().then(function (object) {
-    wordOfTheDay = object.word;
-    console.log(object.word);
-});
 
 // This event listener takes user input, verifies it's a letter, and then pushes it to our array
 // Also, it runs the first game function as well, so every time the event fires, the firstGame() fires too
@@ -168,4 +179,7 @@ document.addEventListener("keyup", function(event) {
 
 // console.log(letterArray);
 
+// getWordToday();
+// getQuantity(wordOfTheDay);
 
+getTheWord();
