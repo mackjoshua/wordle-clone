@@ -79,6 +79,7 @@ async function getWordToday () {
 // This function sets the word of the day
 const getTheWord = () => getWordToday().then(function (object) {
     wordOfTheDay = object.word;
+    // wordOfTheDay.split('');
     console.log(object.word + ' this is the word of the day');
     getQuantity(wordOfTheDay);
 });
@@ -90,24 +91,34 @@ const getTheWord = () => getWordToday().then(function (object) {
 
 // this function takes the word of the day, splits it into an array so that the filter method can be ran on it
 // and then counts how many times each letter appears
-function getQuantity (wordOfTheDay) {
-    wordOfTheDay = wordOfTheDay.split('');
-    console.log(wordOfTheDay);
+function getQuantity (word) {
+    let thisWord = word;
+    console.log(word);
+    if (typeof word === 'string') {
+        thisWord = word.split('');
+    }
+    // splitWord = word.split('');
     let theArray = [];
-    for (let i = 0; i < wordOfTheDay.length; i++) {
-        const result = wordOfTheDay.filter(value => value == wordOfTheDay[i]).length;
+    for (let i = 0; i < word.length; i++) {
+        const result = thisWord.filter(value => value == thisWord[i]).length;
         theArray.push(result);
-        console.log(result + ' this is the result');
-        console.log(theArray);
+        // console.log(theArray);
     }
     console.log(theArray);
-    createQuant(wordOfTheDay, theArray);
+    let quantity = createQuantObj(thisWord, theArray);
+    return quantity;
 }
 
-function createQuant (word, theArray) {
+
+
+// This function creates an object that stores each letter as a key, and the 
+// number of times it occurs in the keyword as the value
+function createQuantObj (word, array) {
     let quants = {};
-    word.forEach((key,index) => quants[key] = theArray[index]);
-    console.log(quants);
+    word.forEach((key,index) => quants[key] = array[index]);
+    // console.log(quants);
+    // console.log(quants.s);
+    return quants;
 }
 
 
@@ -117,25 +128,37 @@ function runGameTest() {
     }
 }
 
+
 // This function compares the user input against the key, and changes the color based on the result
 function evaluateWord (key, userWord) {
+    const makeKeyObj = getQuantity(key);
+    console.log(makeKeyObj);
 
-    for (let i = 0; i < 5 ; i++) {
+    for (let i = 0; i < key.length ; i++) {
         rowsArray[rowsIndex][i].style.backgroundColor = 'white';
+        if (key[i] === userWord[i]) {
+            console.log(i + ' this is i');
+            rowsArray[rowsIndex][i].style.backgroundColor = 'green';  
+            makeKeyObj[key[i]]--;
+            console.log(makeKeyObj);
+        } 
+    }
 
-        if (key.at(i) == userWord.at(i)) {
-            rowsArray[rowsIndex][i].style.backgroundColor = 'green';
-            console.log(`The index at ${i} matches`);
-        } else if (key.includes(userWord.at(i)) && (key.at(i) != userWord.at(i))){
-                let index = userWord.includes(key[i]);
-                console.log(userWord.indexOf(index) + ' here I am');
-                rowsArray[rowsIndex][i].style.backgroundColor = 'yellow';
+    for (let i = 0; i < key.length; i++) {
+        if (key[i] === userWord[i]) {
+            return;
+        } else if (key.includes(userWord[i]) && makeKeyObj[key[i]] > 0) {
+            makeKeyObj[key[i]]--;
+            rowsArray[rowsIndex][i].style.backgroundColor = 'yellow';
+        } else {
+            rowsArray[rowsIndex][i].style.backgroundColor = 'grey';
+
         }
     }
 }
 
 // This event listener takes user input, verifies it's a letter, and then pushes it to our array
-// Also, it runs the first game function as well, so every time the event fires, the firstGame() fires too
+// Also, it runs the first game function as well, so every time the event fires, the runGameTest() fires too
 // which is responsible for pushing the array elements to the DOM
 
 document.addEventListener("keyup", function(event) {
@@ -181,5 +204,6 @@ document.addEventListener("keyup", function(event) {
 
 // getWordToday();
 // getQuantity(wordOfTheDay);
+
 
 getTheWord();
