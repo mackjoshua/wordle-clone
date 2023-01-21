@@ -143,20 +143,28 @@ function runGameTest() {
     }
 }
 
+async function isItARealWord (userWord) {
+    let userWordResult = await postWord(userWord);
+    return await userWordResult;
+}
+
 
 // This function compares the user input against the key, and changes the color based on the result
-function evaluateWord (key, userWord) {
+async function evaluateWord (key, userWord) {
     const makeKeyObj = getQuantity(key);
     console.log(makeKeyObj);
-    console.log(postWord(userWord));
+    // let userWordResult = postWord(userWord);
+    // console.log(userWordResult + ' here it is');
+    let userWordResult = await isItARealWord(userWord);
+    console.log(userWordResult);
 
 // 1-20-23 EOD Notes: Maybe you need to use a .then() operator
 // need to figure out why the validWord property isn't accessible in this function
 // once that is figured out, the flow control will work properly.
 
-    if (postWord == true) {
+    if (userWordResult == true) {
         for (let i = 0; i < key.length ; i++) {
-            rowsArray[rowsIndex][i].style.backgroundColor = 'white';
+            // rowsArray[rowsIndex][i].style.backgroundColor = 'white';
             if (key[i] === userWord[i]) {
                 console.log(i + ' this is i');
                 rowsArray[rowsIndex][i].style.backgroundColor = 'green';  
@@ -167,22 +175,30 @@ function evaluateWord (key, userWord) {
     
         for (let i = 0; i < key.length; i++) {
             if (key[i] === userWord[i]) {
-                return;
+                // return;
             } else if (key.includes(userWord[i]) && makeKeyObj[key[i]] > 0) {
                 makeKeyObj[key[i]]--;
                 rowsArray[rowsIndex][i].style.backgroundColor = 'yellow';
             } else {
                 rowsArray[rowsIndex][i].style.backgroundColor = 'grey';
-    
             }
         }
-    } else if (postWord.validWord == false) {
+        rowsIndex++;
+        guessIndex++;
+    } else if (userWordResult == false) {
         for (let i = 0; i < key.length ; i++) {
             rowsArray[rowsIndex][i].style.backgroundColor = 'red';
+            // rowsArray[rowsIndex][i].innerText = '';
         }
         console.log('the user word was false, try again');
+        console.log(rowsIndex);
+        console.log(guessIndex);
+        guesses[guessIndex] = [];
+        console.log(guesses[guessIndex])
+        console.log(rowsArray[rowsIndex])
+        runGameTest();
     }
-    
+   
 }
 
 // This event listener takes user input, verifies it's a letter, and then pushes it to our array
@@ -211,8 +227,6 @@ document.addEventListener('keyup', (e) => {
             // console.log(letterArray);
             // letterArray = [];
             runGameTest();
-            rowsIndex++;
-            guessIndex++;
         }
     }
 });
