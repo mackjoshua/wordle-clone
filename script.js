@@ -73,6 +73,8 @@ async function getWordToday () {
     const promise = await fetch('https://words.dev-apis.com/word-of-the-day');
     const processedResponse = await promise.json();
     console.log(typeof processedResponse);
+    console.log(processedResponse);
+
     return processedResponse;
 }
 
@@ -84,10 +86,23 @@ const getTheWord = () => getWordToday().then(function (object) {
     getQuantity(wordOfTheDay);
 });
 
-// word.forEach((key,index) => obj[key] = theArray[index]);
-// You're going to need that later to map the arrays to an object to count the quantity of each letter
+// This function takes an argument which is the users word as an array, joins it to a string
+// then passes that string to an API endpoint which returns an object that contains a value telling us
+// whether the users word is a real word or not
 
-
+async function postWord(value) {
+    const theString = value.join('');
+    let postBody = {
+        word : theString
+    }
+    const poster = await fetch('https://words.dev-apis.com/validate-word', {
+        method: 'POST',
+        body: JSON.stringify(postBody)
+    });
+    const processedResponse = await poster.json();
+    console.log(processedResponse.validWord);
+    return processedResponse.validWord;
+}
 
 // this function takes the word of the day, splits it into an array so that the filter method can be ran on it
 // and then counts how many times each letter appears
@@ -133,28 +148,41 @@ function runGameTest() {
 function evaluateWord (key, userWord) {
     const makeKeyObj = getQuantity(key);
     console.log(makeKeyObj);
+    console.log(postWord(userWord));
 
-    for (let i = 0; i < key.length ; i++) {
-        rowsArray[rowsIndex][i].style.backgroundColor = 'white';
-        if (key[i] === userWord[i]) {
-            console.log(i + ' this is i');
-            rowsArray[rowsIndex][i].style.backgroundColor = 'green';  
-            makeKeyObj[key[i]]--;
-            console.log(makeKeyObj);
-        } 
-    }
+// 1-20-23 EOD Notes: Maybe you need to use a .then() operator
+// need to figure out why the validWord property isn't accessible in this function
+// once that is figured out, the flow control will work properly.
 
-    for (let i = 0; i < key.length; i++) {
-        if (key[i] === userWord[i]) {
-            return;
-        } else if (key.includes(userWord[i]) && makeKeyObj[key[i]] > 0) {
-            makeKeyObj[key[i]]--;
-            rowsArray[rowsIndex][i].style.backgroundColor = 'yellow';
-        } else {
-            rowsArray[rowsIndex][i].style.backgroundColor = 'grey';
-
+    if (postWord == true) {
+        for (let i = 0; i < key.length ; i++) {
+            rowsArray[rowsIndex][i].style.backgroundColor = 'white';
+            if (key[i] === userWord[i]) {
+                console.log(i + ' this is i');
+                rowsArray[rowsIndex][i].style.backgroundColor = 'green';  
+                makeKeyObj[key[i]]--;
+                console.log(makeKeyObj);
+            } 
         }
+    
+        for (let i = 0; i < key.length; i++) {
+            if (key[i] === userWord[i]) {
+                return;
+            } else if (key.includes(userWord[i]) && makeKeyObj[key[i]] > 0) {
+                makeKeyObj[key[i]]--;
+                rowsArray[rowsIndex][i].style.backgroundColor = 'yellow';
+            } else {
+                rowsArray[rowsIndex][i].style.backgroundColor = 'grey';
+    
+            }
+        }
+    } else if (postWord.validWord == false) {
+        for (let i = 0; i < key.length ; i++) {
+            rowsArray[rowsIndex][i].style.backgroundColor = 'red';
+        }
+        console.log('the user word was false, try again');
     }
+    
 }
 
 // This event listener takes user input, verifies it's a letter, and then pushes it to our array
@@ -207,3 +235,4 @@ document.addEventListener("keyup", function(event) {
 
 
 getTheWord();
+// postWord('Shrel');
