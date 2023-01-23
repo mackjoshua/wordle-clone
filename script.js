@@ -78,16 +78,12 @@ const winAlert = document.querySelector('#wonAlert');
 async function getWordToday () {
     const promise = await fetch('https://words.dev-apis.com/word-of-the-day');
     const processedResponse = await promise.json();
-    console.log(typeof processedResponse);
-    console.log(processedResponse);
-
     return processedResponse;
 }
 
 // This function sets the word of the day
 const getTheWord = () => getWordToday().then(function (object) {
     wordOfTheDay = object.word;
-    console.log(object.word + ' this is the word of the day');
     getQuantity(wordOfTheDay);
 });
 
@@ -105,7 +101,6 @@ async function postWord(value) {
         body: JSON.stringify(postBody)
     });
     const processedResponse = await poster.json();
-    console.log(processedResponse.validWord);
     return processedResponse.validWord;
 }
 
@@ -113,7 +108,6 @@ async function postWord(value) {
 // and then counts how many times each letter appears
 function getQuantity (word) {
     let thisWord = word;
-    console.log(word);
     if (typeof word === 'string') {
         thisWord = word.split('');
     }
@@ -122,8 +116,8 @@ function getQuantity (word) {
         const result = thisWord.filter(value => value == thisWord[i]).length;
         theArray.push(result);
     }
-    console.log(theArray);
     let quantity = createQuantObj(thisWord, theArray);
+    console.log(quantity);
     return quantity;
 }
 
@@ -150,25 +144,22 @@ async function evaluateWord (key, userWord) {
     let userWordResult = await postWord(userWord);
     // console.log(userWordResult);
 
-// 1-20-23 EOD Notes: Maybe you need to use a .then() operator
-// need to figure out why the validWord property isn't accessible in this function
-// once that is figured out, the flow control will work properly.
-
     if (userWordResult == true) {
         for (let i = 0; i < key.length ; i++) {
             // rowsArray[rowsIndex][i].style.backgroundColor = 'white';
             if (key[i] === userWord[i]) {
                 rowsArray[rowsIndex][i].style.backgroundColor = 'green';  
                 makeKeyObj[key[i]]--;
+                console.log(makeKeyObj);
             } 
         }
     
         for (let i = 0; i < key.length; i++) {
             if (key[i] === userWord[i]) {
                 // return;
-            } else if (key.includes(userWord[i]) && makeKeyObj[key[i]] > 0) {
-                makeKeyObj[key[i]]--;
+            } else if (key.includes(userWord[i]) && (makeKeyObj[key[i]] > 1)) {
                 rowsArray[rowsIndex][i].style.backgroundColor = 'yellow';
+                makeKeyObj[key[i]]--;
             } else {
                 rowsArray[rowsIndex][i].style.backgroundColor = 'grey';
             }
