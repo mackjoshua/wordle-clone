@@ -65,6 +65,11 @@ let wordOfTheDay;
 let rowsIndex = 0;
 let guessIndex = 0;
 
+const lossMessage = document.querySelector('#loss-message');
+const reloadButtons = document.querySelectorAll('.play-again');
+const lossAlert = document.querySelector('#lossAlert');
+const winAlert = document.querySelector('#wonAlert');
+
 // This function runs a for loop that prints the value of our array, which previously had a letter pushed to it,
 // to the DOM by setting the innerText value of the element of spaces at the same index. The values are all <td> elements
 
@@ -182,6 +187,7 @@ async function evaluateWord (key, userWord) {
    console.log(guessIndex);
 }
 
+// This function ends the game by checking to see if the user's word and the keyword match
 function endGame() {
 
    if (guesses[guessIndex].join('') == wordOfTheDay) {
@@ -189,13 +195,17 @@ function endGame() {
     document.removeEventListener('keyup', keyPush);
     document.removeEventListener('keyup', enterWord);
     document.removeEventListener('keyup', popLetter);
+    winAlert.classList.remove('visible');
    }
 
    if (guessIndex == 5 && guesses[guessIndex].join('') !== wordOfTheDay) {
+    lossMessage.innerText += ` ${wordOfTheDay}`;
     console.log(`You lost, the word was ${wordOfTheDay}`);
     document.removeEventListener('keyup', keyPush);
     document.removeEventListener('keyup', enterWord);
     document.removeEventListener('keyup', popLetter);
+    lossAlert.classList.remove('visible');
+
    }
 }
 
@@ -227,6 +237,10 @@ function popLetter (e) {
     }
 }
 
+function reloadGame () {
+    location.reload();
+}
+
 // This event listener takes user input, verifies it's a letter, and then pushes it to our array
 // Also, it runs the first game function as well, so every time the event fires, the runGameTest() fires too
 // which is responsible for pushing the array elements to the DOM
@@ -240,3 +254,5 @@ document.addEventListener('keyup', enterWord);
 // This event listener pops the last item off of the letterArray, and runs the firstGame() function to 
 // repopulate the DOM
 document.addEventListener("keyup", popLetter);
+
+reloadButtons.forEach(button => button.addEventListener('click', reloadGame));
