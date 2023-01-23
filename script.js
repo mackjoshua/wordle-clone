@@ -1,3 +1,4 @@
+
 let guess1 = [];
 let guess2 = [];
 let guess3 = [];
@@ -81,7 +82,6 @@ async function getWordToday () {
 // This function sets the word of the day
 const getTheWord = () => getWordToday().then(function (object) {
     wordOfTheDay = object.word;
-    // wordOfTheDay.split('');
     console.log(object.word + ' this is the word of the day');
     getQuantity(wordOfTheDay);
 });
@@ -112,12 +112,10 @@ function getQuantity (word) {
     if (typeof word === 'string') {
         thisWord = word.split('');
     }
-    // splitWord = word.split('');
     let theArray = [];
     for (let i = 0; i < word.length; i++) {
         const result = thisWord.filter(value => value == thisWord[i]).length;
         theArray.push(result);
-        // console.log(theArray);
     }
     console.log(theArray);
     let quantity = createQuantObj(thisWord, theArray);
@@ -131,8 +129,6 @@ function getQuantity (word) {
 function createQuantObj (word, array) {
     let quants = {};
     word.forEach((key,index) => quants[key] = array[index]);
-    // console.log(quants);
-    // console.log(quants.s);
     return quants;
 }
 
@@ -143,20 +139,11 @@ function runGameTest() {
     }
 }
 
-async function isItARealWord (userWord) {
-    let userWordResult = await postWord(userWord);
-    return await userWordResult;
-}
-
-
 // This function compares the user input against the key, and changes the color based on the result
 async function evaluateWord (key, userWord) {
     const makeKeyObj = getQuantity(key);
-    console.log(makeKeyObj);
-    // let userWordResult = postWord(userWord);
-    // console.log(userWordResult + ' here it is');
-    let userWordResult = await isItARealWord(userWord);
-    console.log(userWordResult);
+    let userWordResult = await postWord(userWord);
+    // console.log(userWordResult);
 
 // 1-20-23 EOD Notes: Maybe you need to use a .then() operator
 // need to figure out why the validWord property isn't accessible in this function
@@ -166,10 +153,8 @@ async function evaluateWord (key, userWord) {
         for (let i = 0; i < key.length ; i++) {
             // rowsArray[rowsIndex][i].style.backgroundColor = 'white';
             if (key[i] === userWord[i]) {
-                console.log(i + ' this is i');
                 rowsArray[rowsIndex][i].style.backgroundColor = 'green';  
                 makeKeyObj[key[i]]--;
-                console.log(makeKeyObj);
             } 
         }
     
@@ -191,62 +176,67 @@ async function evaluateWord (key, userWord) {
             // rowsArray[rowsIndex][i].innerText = '';
         }
         console.log('the user word was false, try again');
-        console.log(rowsIndex);
-        console.log(guessIndex);
         guesses[guessIndex] = [];
-        console.log(guesses[guessIndex])
-        console.log(rowsArray[rowsIndex])
         runGameTest();
     }
-   
+   console.log(guessIndex);
 }
 
-// This event listener takes user input, verifies it's a letter, and then pushes it to our array
-// Also, it runs the first game function as well, so every time the event fires, the runGameTest() fires too
-// which is responsible for pushing the array elements to the DOM
+function endGame() {
 
-document.addEventListener("keyup", function(event) {
-    if (event.key.match(/^[a-zA-Z]$/)) {
-          guesses[guessIndex].push(event.key);
-        //   firstGame();
-          runGameTest();
-        //   console.log(letterArray);
-      }
-  });
+   if (guesses[guessIndex].join('') == wordOfTheDay) {
+    console.log('game over');
+    document.removeEventListener('keyup', keyPush);
+    document.removeEventListener('keyup', enterWord);
+    document.removeEventListener('keyup', popLetter);
+   }
 
+   if (guessIndex == 5 && guesses[guessIndex].join('') !== wordOfTheDay) {
+    console.log(`You lost, the word was ${wordOfTheDay}`);
+    document.removeEventListener('keyup', keyPush);
+    document.removeEventListener('keyup', enterWord);
+    document.removeEventListener('keyup', popLetter);
+   }
+}
 
-// This event listener runs the grabWord function every time the enter button is pressed
-// and the evaluate word function
-document.addEventListener('keyup', (e) => {
+getTheWord();
+
+function keyPush(e) {
+    if (e.key.match(/^[a-zA-Z]$/)) {
+        guesses[guessIndex].push(e.key);
+        runGameTest();
+    }
+}
+
+function enterWord(e) {
     if (e.key == 'Enter') {
         if (guesses[guessIndex].length !== 5) {
             return
         } else {
             evaluateWord(wordOfTheDay, guesses[guessIndex]);
-            // moveRow();
-            // console.log(letterArray);
-            // letterArray = [];
             runGameTest();
+            endGame();
         }
     }
-});
+}
+
+function popLetter (e) {
+    if (e.key === "Backspace") {
+        guesses[guessIndex].pop()
+        runGameTest();
+    }
+}
+
+// This event listener takes user input, verifies it's a letter, and then pushes it to our array
+// Also, it runs the first game function as well, so every time the event fires, the runGameTest() fires too
+// which is responsible for pushing the array elements to the DOM
+document.addEventListener("keyup", keyPush);
+
+
+// This event listener runs the grabWord function every time the enter button is pressed
+// and the evaluate word function
+document.addEventListener('keyup', enterWord);
 
 // This event listener pops the last item off of the letterArray, and runs the firstGame() function to 
 // repopulate the DOM
-document.addEventListener("keyup", function(event) {
-    if (event.key === "Backspace") {
-        guesses[guessIndex].pop()
-        runGameTest();
-        // console.log(letterArray);
-    }
-});
-
-
-// console.log(letterArray);
-
-// getWordToday();
-// getQuantity(wordOfTheDay);
-
-
-getTheWord();
-// postWord('Shrel');
+document.addEventListener("keyup", popLetter);
