@@ -1,5 +1,5 @@
 # wordle-clone
-A clone of the Wordle game
+This program is a clone of the Wordle game.
 
 
 # What it does
