@@ -147,7 +147,7 @@ async function evaluateWord (key, userWord) {
     if (userWordResult == true) {
         for (let i = 0; i < key.length ; i++) {
             if (userWord[i] === key[i]) {
-                rowsArray[rowsIndex][i].style.backgroundColor = 'green';  
+                rowsArray[rowsIndex][i].style.backgroundColor = '#009f78';  
                 makeKeyObj[key[i]]--;
                 console.log(makeKeyObj);
             } 
@@ -157,17 +157,17 @@ async function evaluateWord (key, userWord) {
             if (key[i] === userWord[i]) {
                 // return;
             } else if (key.includes(userWord[i]) && (makeKeyObj[userWord[i]] > 0)) {
-                rowsArray[rowsIndex][i].style.backgroundColor = 'yellow';
+                rowsArray[rowsIndex][i].style.backgroundColor = '#9c8b00';
                 makeKeyObj[key[i]]--;
             } else {
-                rowsArray[rowsIndex][i].style.backgroundColor = 'grey';
+                rowsArray[rowsIndex][i].style.backgroundColor = '#0071af';
             }
         }
         rowsIndex++;
         guessIndex++;
     } else if (userWordResult == false) {
         for (let i = 0; i < key.length ; i++) {
-            rowsArray[rowsIndex][i].style.backgroundColor = 'red';
+            rowsArray[rowsIndex][i].style.backgroundColor = '#FD4D00';
             // rowsArray[rowsIndex][i].innerText = '';
         }
         console.log('the user word was false, try again');
