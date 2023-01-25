@@ -28,6 +28,3 @@ I learned a lot through this project, such as how to utilize the fetch() API to 
 
 In the future I would like to add a keyboard that allows users to select letters to input to their word array, as well as indicate which letters have been used and what the outcome was.
 
-Currently I am trying to weed out one final bug, which has to do with improper letter quantity counting. I have a function that creates an object that contains each letter in the keyword as a key, and the amount of times it appears in the keyword as the value. If the user's word guesses the correct letter, every time it does this it should subtract one from the corresponding key-value in the aforementioned object. Currently it is doing this, but the incorrect amount of letters is still being highlighted. Once this bug is taken care of, the program will be fully completed. 
-
-I welcome any suggestions on how to fix the problem!

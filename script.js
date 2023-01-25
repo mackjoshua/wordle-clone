@@ -158,7 +158,7 @@ async function evaluateWord (key, userWord) {
                 // return;
             } else if (key.includes(userWord[i]) && (makeKeyObj[userWord[i]] > 0)) {
                 rowsArray[rowsIndex][i].style.backgroundColor = '#9c8b00';
-                makeKeyObj[key[i]]--;
+                makeKeyObj[userWord[i]]--;
             } else {
                 rowsArray[rowsIndex][i].style.backgroundColor = '#0071af';
             }
